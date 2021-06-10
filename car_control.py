@@ -42,7 +42,7 @@ def get():
     return 1
 
 def get_command():
-    command = input(">>> Waiting for command: ")
+    command = input("[Home]>>> ")
     if command == "over": 
         return 0
     elif command == "test":
@@ -52,6 +52,7 @@ def get_command():
         park_mode()
         return 1
     elif command == "line":
+        line_mode()
         return 1
     elif command == "aptag":
         return 1
@@ -59,89 +60,32 @@ def get_command():
         print(command[:] + " is not keyword")
         return 1
 
-def park_mode():
-    print(">>> enter park mode")
-
-    command = input()
-    while command != "quit":
-        str = command.split(' ')
-        if len(str) < 2:
-            print (f"{command} is not a keyward")
-            dirct = "none"
-        else :
-            d1 = float(str[0])
-            d2 = float(str[1])
-            dirct = str[2]
-
-        if dirct == "west":
-            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
-            time.sleep(1)
-            spin_couneterclockwise() 
-            time.sleep(1)
-            go_back(d2 + 10) # 15 is the half length of BBcar
-        elif dirct == "east":
-            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
-            time.sleep(1)
-            spin_clockwise() 
-            time.sleep(1)
-            go_back(d2 + 10) # 15 is the half length of BBcar
-        command = input()
-
-    print(">>> leave park mode")
-
-
-def go_forward(length):
-    print(f"go forward {length} cm")
-    s.write("/goStraight/run 200 \n".encode())
-    time.sleep(length / fv)
-    s.write("/stop/run \n".encode())
-
-def go_back(length):
-    print (f"go back {length} cm")
-    s.write("/goStraight/run -200 \n".encode())
-    s.write("/LED/write 1 \n".encode())
-    time.sleep(length / bv)
-    s.write("/stop/run \n".encode())
-    s.write("/LED/write 0 \n".encode())
-
-def spin_clockwise():
-    print ("spin clockwise 90 degree")
-    s.write("/turn/run 200 1 \n".encode())
-    time.sleep(0.36)
-    s.write("/stop/run \n".encode())
-
-def spin_couneterclockwise():
-    print ("spin counterclockwise 90 degree")
-    s.write("/turn/run 200 -1 \n".encode())
-    time.sleep(0.37)
-    s.write("/stop/run \n".encode())
-
 def test_mode():
-    print(">>> enter test mode")
+    print("[Test]: enter test mode")
 
-    command = input()
+    command = input("[Test]>>> ")
     while command != "quit":
 
         if command == "ww":
             go_forward(10)
-            command = input()
+            command = input("[Test]>>> ")
             continue
         elif command == "ss":
             go_back(10)
-            command = input()
+            command = input("[Test]>>> ")
             continue
         elif command == "dd":
             spin_clockwise()
-            command = input()
+            command = input("[Test]>>> ")
             continue
         elif command == "aa":
             spin_couneterclockwise()
-            command = input()
+            command = input("[Test]>>> ")
             continue
 
         str = command.split()
         if len(str) < 2:
-            print (f"{command} is not a keyward")
+            print (f"{command} is not a keyword")
             dirct = "none"
         else :
             dirct = str[0]
@@ -168,9 +112,82 @@ def test_mode():
             s.write("/turn/run 200 -1 \n".encode())
             time.sleep(t)
             s.write("/stop/run \n".encode())
-        command = input()
+        command = input("[Test]>>> ")
 
-    print(">>> leave test mode")
+    print("[Test]: leave test mode")
+
+def park_mode():
+    print("[Park]: enter park mode")
+
+    command = input("[Park]>>> ")
+    while command != "quit":
+        str = command.split(' ')
+        if len(str) < 2:
+            print (f"{command} is not a keyword")
+            dirct = "none"
+        else :
+            d1 = float(str[0])
+            d2 = float(str[1])
+            dirct = str[2]
+
+        if dirct == "west":
+            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
+            time.sleep(1)
+            spin_couneterclockwise() 
+            time.sleep(1)
+            go_back(d2 + 10) # 15 is the half length of BBcar
+        elif dirct == "east":
+            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
+            time.sleep(1)
+            spin_clockwise() 
+            time.sleep(1)
+            go_back(d2 + 10) # 15 is the half length of BBcar
+        command = input("[Park]>>> ")
+
+    print("[Park]: leave park mode")
+
+def line_mode():
+    print("[Line]: enter line mode")
+    
+    s.write("/LED2/write 1 \n".encode())
+    command = input("[Line]>>> ")
+    while command != "quit":
+        s.write("/LED2/write 1 \n".encode())
+        command = input("[Line]>>> ")
+    s.write("/LED2/write 0 \n".encode())
+    stop()
+
+    print("[Line]: leave line mode")
+
+
+def go_forward(length):
+    print(f"go forward {length} cm")
+    s.write("/goStraight/run 200 \n".encode())
+    time.sleep(length / fv)
+    s.write("/stop/run \n".encode())
+
+def go_back(length):
+    print (f"go back {length} cm")
+    s.write("/goStraight/run -200 \n".encode())
+    time.sleep(length / bv)
+    s.write("/stop/run \n".encode())
+    s.write("/LED/write 0 \n".encode())
+
+def spin_clockwise():
+    print ("spin clockwise 90 degree")
+    s.write("/turn/run 200 1 \n".encode())
+    time.sleep(0.36)
+    s.write("/stop/run \n".encode())
+
+def spin_couneterclockwise():
+    print ("spin counterclockwise 90 degree")
+    s.write("/turn/run 200 -1 \n".encode())
+    time.sleep(0.37)
+    s.write("/stop/run \n".encode())
+
+def stop():
+    s.write("/stop/run \n".encode())
+
 
 # main()
 if len(sys.argv) < 1:

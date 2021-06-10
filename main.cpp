@@ -4,7 +4,6 @@
 #include "bbcar_rpc.h"
 using namespace std;
 
-
 /* BBcar */
 Ticker servo_ticker;
 PwmOut pin5(D5); // left wheel (yellow)
@@ -12,10 +11,15 @@ PwmOut pin6(D6); // right wheel (orange)
 BBCar car(pin5, pin6, servo_ticker);
 
 /* Xbee */
-BufferedSerial xbee(D1, D0);
-RpcDigitalOut myled2(LED1,"LED");
+BufferedSerial xbee(D1, D0); //tx,rx
 
-/* Ping */
+/* Uart */
+BufferedSerial pc(USBTX,USBRX); //tx,rx
+BufferedSerial uart(D10,D9); //tx,rx
+
+/* DigitalOut */
+DigitalOut led2(LED2);
+RpcDigitalOut RPCled2(LED2,"LED2");
 
 ////////////////////////////////////////////////////
 
@@ -31,7 +35,7 @@ EventQueue aptag_event;
 
 /* Function */
 void park() {};
-void line() {};
+void line();
 void aptag() {};
 void RPC();   // read RPC command
 
@@ -82,5 +86,21 @@ void RPC()
          buf[i] = fputc(recv, devout);
       }
    RPC::call(buf, outbuf);
+   }
+}
+
+void line()
+{
+   uart.set_baud(9600);
+   while (1) {
+      if (uart.readable() && led2) {
+         char recv[1];
+         uart.read(recv, sizeof(recv));
+
+         if (recv[0] == 'y') car.goStraight(200);
+         else if (recv[0] == 'n') car.stop();
+
+         if (!led2) car.stop();
+      }
    }
 }
