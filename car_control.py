@@ -45,6 +45,9 @@ def get_command():
     command = input(">>> Waiting for command: ")
     if command == "over": 
         return 0
+    elif command == "test":
+        test_mode()
+        return 1
     elif command == "park":
         park_mode()
         return 1
@@ -62,56 +65,118 @@ def park_mode():
     command = input()
     while command != "quit":
         str = command.split(' ')
-        d1 = str[0]
-        d2 = str[1]
-        dirct = str[2]
+        if len(str) < 2:
+            print (f"{command} is not a keyward")
+            dirct = "none"
+        else :
+            d1 = float(str[0])
+            d2 = float(str[1])
+            dirct = str[2]
+
         if dirct == "west":
-            go_back(d1)
-            spin_couneterclockwise()
-            go_back(int(d2) + 15)
+            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
+            time.sleep(1)
+            spin_couneterclockwise() 
+            time.sleep(1)
+            go_back(d2 + 10) # 15 is the half length of BBcar
         elif dirct == "east":
-            go_back(d1)
-            spin_clockwise()
-            go_back(int(d2) + 15)
+            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
+            time.sleep(1)
+            spin_clockwise() 
+            time.sleep(1)
+            go_back(d2 + 10) # 15 is the half length of BBcar
         command = input()
 
     print(">>> leave park mode")
 
 
 def go_forward(length):
-    print(f"go forward {length}")
-    s.write("/goStraight/run 100 \n".encode())
-    time.sleep(1) # 1 should be length / velocity
+    print(f"go forward {length} cm")
+    s.write("/goStraight/run 200 \n".encode())
+    time.sleep(length / fv)
     s.write("/stop/run \n".encode())
 
 def go_back(length):
-    print (f"go back {length}")
-    s.write("/goStraight/run -100 \n".encode())
+    print (f"go back {length} cm")
+    s.write("/goStraight/run -200 \n".encode())
     s.write("/LED/write 1 \n".encode())
-    time.sleep(1) # 1 should be length / velocity
+    time.sleep(length / bv)
     s.write("/stop/run \n".encode())
     s.write("/LED/write 0 \n".encode())
 
 def spin_clockwise():
-    print ("spin clockwise")
-    s.write("/turn/run 100 -1 \n".encode())
-    time.sleep(1) # for determined
+    print ("spin clockwise 90 degree")
+    s.write("/turn/run 200 1 \n".encode())
+    time.sleep(0.36)
     s.write("/stop/run \n".encode())
 
 def spin_couneterclockwise():
-    print ("spin counterclockwise")
-    s.write("/turn/run 100 1 \n".encode())
-    time.sleep(1) # for determined
+    print ("spin counterclockwise 90 degree")
+    s.write("/turn/run 200 -1 \n".encode())
+    time.sleep(0.37)
     s.write("/stop/run \n".encode())
 
+def test_mode():
+    print(">>> enter test mode")
+
+    command = input()
+    while command != "quit":
+
+        if command == "ww":
+            go_forward(10)
+            command = input()
+            continue
+        elif command == "ss":
+            go_back(10)
+            command = input()
+            continue
+        elif command == "dd":
+            spin_clockwise()
+            command = input()
+            continue
+        elif command == "aa":
+            spin_couneterclockwise()
+            command = input()
+            continue
+
+        str = command.split()
+        if len(str) < 2:
+            print (f"{command} is not a keyward")
+            dirct = "none"
+        else :
+            dirct = str[0]
+            t = float(str[1])
+        
+
+        if dirct == "w":
+            print(f"go forward {t} cm")
+            s.write("/goStraight/run 200 \n".encode())
+            time.sleep(t / fv)
+            s.write("/stop/run \n".encode())
+        elif dirct == "s":
+            print(f"go back {t} cm")
+            s.write("/goStraight/run -200 \n".encode())
+            time.sleep(t / bv)
+            s.write("/stop/run \n".encode())
+        elif dirct == "d":
+            print (f"spin clockwise {t} sec")
+            s.write("/turn/run 200 1 \n".encode())
+            time.sleep(t)
+            s.write("/stop/run \n".encode())
+        elif dirct == "a":
+            print (f"spin counterclockwise {t} sec")
+            s.write("/turn/run 200 -1 \n".encode())
+            time.sleep(t)
+            s.write("/stop/run \n".encode())
+        command = input()
+
+    print(">>> leave test mode")
 
 # main()
 if len(sys.argv) < 1:
     print ("No port input")
 s = serial.Serial(sys.argv[1])
+fv = 22    # forward velocity (cm/s)
+bv = 21.8  # backward velocity (cm/s)
 while get_command():
     i = 0
-'''
-while get():
-    i = 0
-'''
