@@ -55,6 +55,7 @@ def get_command():
         line_mode()
         return 1
     elif command == "aptag":
+        aptag_mode()
         return 1
     else:
         print(command[:] + " is not keyword")
@@ -158,6 +159,19 @@ def line_mode():
     stop()
 
     print("[Line]: leave line mode")
+
+def aptag_mode():
+    print("[Aptag]: enter aptag mode")
+    
+    s.write("/LED1/write 1 \n".encode())
+    command = input("[Aptag]>>> ")
+    while command != "quit":
+        s.write("/LED1/write 1 \n".encode())
+        command = input("[Aptag]>>> ")
+    s.write("/LED1/write 0 \n".encode())
+    stop()
+
+    print("[Aptag]: leave aptag mode")
 
 
 def go_forward(length):
