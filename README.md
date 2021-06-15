@@ -296,67 +296,33 @@ def park_mode():
 ## [Line]
 Turn the line-following mode in mbed.
 ``` bash
-def park_mode():
-    print("[Park]: enter park mode")
-
-    command = input("[Park]>>> ")
+def line_mode():
+    print("[Line]: enter line mode")
+    
+    s.write("/LED2/write 1 \n".encode())
+    command = input("[Line]>>> ")
     while command != "quit":
-        str = command.split(' ')
-        if len(str) < 2:
-            print (f"{command} is not a keyword")
-            dirct = "none"
-        else :
-            d1 = float(str[0])
-            d2 = float(str[1])
-            dirct = str[2]
+        s.write("/LED2/write 1 \n".encode())
+        command = input("[Line]>>> ")
+    s.write("/LED2/write 0 \n".encode())
+    stop()
 
-        if dirct == "west":
-            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
-            time.sleep(1)
-            spin_couneterclockwise() 
-            time.sleep(1)
-            go_back(d2 + 10) # 15 is the half length of BBcar
-        elif dirct == "east":
-            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
-            time.sleep(1)
-            spin_clockwise() 
-            time.sleep(1)
-            go_back(d2 + 10) # 15 is the half length of BBcar
-        command = input("[Park]>>> ")
-
-    print("[Park]: leave park mode")
+    print("[Line]: leave line mode")
 ```
 
 ## [Aptag]
 Turn the AprilTag-following mode in mbed.
 ``` bash
-def park_mode():
-    print("[Park]: enter park mode")
-
-    command = input("[Park]>>> ")
+def aptag_mode():
+    print("[Aptag]: enter aptag mode")
+    
+    s.write("/LED1/write 1 \n".encode())
+    command = input("[Aptag]>>> ")
     while command != "quit":
-        str = command.split(' ')
-        if len(str) < 2:
-            print (f"{command} is not a keyword")
-            dirct = "none"
-        else :
-            d1 = float(str[0])
-            d2 = float(str[1])
-            dirct = str[2]
+        s.write("/LED1/write 1 \n".encode())
+        command = input("[Aptag]>>> ")
+    s.write("/LED1/write 0 \n".encode())
+    stop()
 
-        if dirct == "west":
-            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
-            time.sleep(1)
-            spin_couneterclockwise() 
-            time.sleep(1)
-            go_back(d2 + 10) # 15 is the half length of BBcar
-        elif dirct == "east":
-            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
-            time.sleep(1)
-            spin_clockwise() 
-            time.sleep(1)
-            go_back(d2 + 10) # 15 is the half length of BBcar
-        command = input("[Park]>>> ")
-
-    print("[Park]: leave park mode")
+    print("[Aptag]: leave aptag mode")
 ```
