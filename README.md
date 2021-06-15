@@ -191,8 +191,8 @@ def get_command():
 
 ```
 
-## Test mode
-This mode allow user to control BBCar arbitrarily.
+## [Test]
+This mode allow user to control BBCar arbitrarily.\
 ww -> go forward 10 cm.\
 ss -> go back 10 cm.\
 dd -> spin clockwise 90 degrees.\
@@ -257,4 +257,106 @@ def test_mode():
         command = input("[Test]>>> ")
 
     print("[Test]: leave test mode")
+```
+
+## [Park]
+Park BBcar by enter "d1 d2 direction".
+``` bash
+def park_mode():
+    print("[Park]: enter park mode")
+
+    command = input("[Park]>>> ")
+    while command != "quit":
+        str = command.split(' ')
+        if len(str) < 2:
+            print (f"{command} is not a keyword")
+            dirct = "none"
+        else :
+            d1 = float(str[0])
+            d2 = float(str[1])
+            dirct = str[2]
+
+        if dirct == "west":
+            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
+            time.sleep(1)
+            spin_couneterclockwise() 
+            time.sleep(1)
+            go_back(d2 + 10) # 15 is the half length of BBcar
+        elif dirct == "east":
+            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
+            time.sleep(1)
+            spin_clockwise() 
+            time.sleep(1)
+            go_back(d2 + 10) # 15 is the half length of BBcar
+        command = input("[Park]>>> ")
+
+    print("[Park]: leave park mode")
+```
+
+## [Line]
+Turn the line-following mode in mbed.
+``` bash
+def park_mode():
+    print("[Park]: enter park mode")
+
+    command = input("[Park]>>> ")
+    while command != "quit":
+        str = command.split(' ')
+        if len(str) < 2:
+            print (f"{command} is not a keyword")
+            dirct = "none"
+        else :
+            d1 = float(str[0])
+            d2 = float(str[1])
+            dirct = str[2]
+
+        if dirct == "west":
+            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
+            time.sleep(1)
+            spin_couneterclockwise() 
+            time.sleep(1)
+            go_back(d2 + 10) # 15 is the half length of BBcar
+        elif dirct == "east":
+            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
+            time.sleep(1)
+            spin_clockwise() 
+            time.sleep(1)
+            go_back(d2 + 10) # 15 is the half length of BBcar
+        command = input("[Park]>>> ")
+
+    print("[Park]: leave park mode")
+```
+
+## [Aptag]
+Turn the AprilTag-following mode in mbed.
+``` bash
+def park_mode():
+    print("[Park]: enter park mode")
+
+    command = input("[Park]>>> ")
+    while command != "quit":
+        str = command.split(' ')
+        if len(str) < 2:
+            print (f"{command} is not a keyword")
+            dirct = "none"
+        else :
+            d1 = float(str[0])
+            d2 = float(str[1])
+            dirct = str[2]
+
+        if dirct == "west":
+            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
+            time.sleep(1)
+            spin_couneterclockwise() 
+            time.sleep(1)
+            go_back(d2 + 10) # 15 is the half length of BBcar
+        elif dirct == "east":
+            go_back(d1 + 15) # 5 is the half width of BBcar, 12 is the width of space
+            time.sleep(1)
+            spin_clockwise() 
+            time.sleep(1)
+            go_back(d2 + 10) # 15 is the half length of BBcar
+        command = input("[Park]>>> ")
+
+    print("[Park]: leave park mode")
 ```
