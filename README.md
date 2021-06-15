@@ -163,3 +163,98 @@ void aptag()
    }
 }
 ``` 
+# PC (car_control.py)
+
+## [Home]
+Enter the keyword to get in the correspondong mode.
+Enter "over" to shit down this project.
+``` bash
+def get_command():
+    command = input("[Home]>>> ")
+    if command == "over": 
+        return 0
+    elif command == "test":
+        test_mode()
+        return 1
+    elif command == "park":
+        park_mode()
+        return 1
+    elif command == "line":
+        line_mode()
+        return 1
+    elif command == "aptag":
+        aptag_mode()
+        return 1
+    else:
+        print(command[:] + " is not keyword")
+        return 1
+
+```
+
+## Test mode
+This mode allow user to control BBCar arbitrarily.
+ww -> go forward 10 cm.\
+ss -> go back 10 cm.\
+dd -> spin clockwise 90 degrees.\
+aa -> spin counterclockwise 90 degrees.\
+w x -> go forward x cm.\
+s x -> go back x cm.\
+d t -> spin clockwise t sec.\
+a t -> spin counterclockwise t sec.
+``` bash
+def test_mode():
+    print("[Test]: enter test mode")
+
+    command = input("[Test]>>> ")
+    while command != "quit":
+
+        if command == "ww":
+            go_forward(10)
+            command = input("[Test]>>> ")
+            continue
+        elif command == "ss":
+            go_back(10)
+            command = input("[Test]>>> ")
+            continue
+        elif command == "dd":
+            spin_clockwise()
+            command = input("[Test]>>> ")
+            continue
+        elif command == "aa":
+            spin_couneterclockwise()
+            command = input("[Test]>>> ")
+            continue
+
+        str = command.split()
+        if len(str) < 2:
+            print (f"{command} is not a keyword")
+            dirct = "none"
+        else :
+            dirct = str[0]
+            t = float(str[1])
+        
+
+        if dirct == "w":
+            print(f"go forward {t} cm")
+            s.write("/goStraight/run 200 \n".encode())
+            time.sleep(t / fv)
+            s.write("/stop/run \n".encode())
+        elif dirct == "s":
+            print(f"go back {t} cm")
+            s.write("/goStraight/run -200 \n".encode())
+            time.sleep(t / bv)
+            s.write("/stop/run \n".encode())
+        elif dirct == "d":
+            print (f"spin clockwise {t} sec")
+            s.write("/turn/run 200 1 \n".encode())
+            time.sleep(t)
+            s.write("/stop/run \n".encode())
+        elif dirct == "a":
+            print (f"spin counterclockwise {t} sec")
+            s.write("/turn/run 200 -1 \n".encode())
+            time.sleep(t)
+            s.write("/stop/run \n".encode())
+        command = input("[Test]>>> ")
+
+    print("[Test]: leave test mode")
+```
